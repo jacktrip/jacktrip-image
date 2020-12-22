@@ -1,0 +1,625 @@
+state.sndrpihifiberry {
+	control.1 {
+		iface MIXER
+		name 'Digital Playback Volume'
+		value.0 190
+		value.1 190
+		comment {
+			access 'read write'
+			type INTEGER
+			count 2
+			range '0 - 207'
+			dbmin -9999999
+			dbmax 0
+			dbvalue.0 -350
+			dbvalue.1 -350
+		}
+	}
+	control.2 {
+		iface MIXER
+		name 'Analogue Playback Volume'
+		value.0 1
+		value.1 1
+		comment {
+			access 'read write'
+			type INTEGER
+			count 2
+			range '0 - 1'
+			dbmin -600
+			dbmax 0
+			dbvalue.0 -600
+			dbvalue.1 -600
+		}
+	}
+	control.3 {
+		iface MIXER
+		name 'Analogue Playback Boost Volume'
+		value.0 0
+		value.1 0
+		comment {
+			access 'read write'
+			type INTEGER
+			count 2
+			range '0 - 1'
+			dbmin 0
+			dbmax 80
+			dbvalue.0 0
+			dbvalue.1 0
+		}
+	}
+	control.4 {
+		iface MIXER
+		name 'Digital Playback Switch'
+		value.0 true
+		value.1 true
+		comment {
+			access 'read write'
+			type BOOLEAN
+			count 2
+		}
+	}
+	control.5 {
+		iface MIXER
+		name 'Deemphasis Switch'
+		value true
+		comment {
+			access 'read write'
+			type BOOLEAN
+			count 1
+		}
+	}
+	control.6 {
+		iface MIXER
+		name 'DSP Program'
+		value 'Low latency IIR with de-emphasis'
+		comment {
+			access 'read write'
+			type ENUMERATED
+			count 1
+			item.0 'FIR interpolation with de-emphasis'
+			item.1 'Low latency IIR with de-emphasis'
+			item.2 'High attenuation with de-emphasis'
+			item.3 'Fixed process flow'
+			item.4 'Ringing-less low latency FIR'
+		}
+	}
+	control.7 {
+		iface MIXER
+		name 'Clock Missing Period'
+		value '1s'
+		comment {
+			access 'read write'
+			type ENUMERATED
+			count 1
+			item.0 '1s'
+			item.1 '2s'
+			item.2 '3s'
+			item.3 '4s'
+			item.4 '5s'
+			item.5 '6s'
+			item.6 '7s'
+			item.7 '8s'
+		}
+	}
+	control.8 {
+		iface MIXER
+		name 'Auto Mute Time Left'
+		value '21ms'
+		comment {
+			access 'read write'
+			type ENUMERATED
+			count 1
+			item.0 '21ms'
+			item.1 '106ms'
+			item.2 '213ms'
+			item.3 '533ms'
+			item.4 '1.07s'
+			item.5 '2.13s'
+			item.6 '5.33s'
+			item.7 '10.66s'
+		}
+	}
+	control.9 {
+		iface MIXER
+		name 'Auto Mute Time Right'
+		value '21ms'
+		comment {
+			access 'read write'
+			type ENUMERATED
+			count 1
+			item.0 '21ms'
+			item.1 '106ms'
+			item.2 '213ms'
+			item.3 '533ms'
+			item.4 '1.07s'
+			item.5 '2.13s'
+			item.6 '5.33s'
+			item.7 '10.66s'
+		}
+	}
+	control.10 {
+		iface MIXER
+		name 'Auto Mute Mono Switch'
+		value true
+		comment {
+			access 'read write'
+			type BOOLEAN
+			count 1
+		}
+	}
+	control.11 {
+		iface MIXER
+		name 'Auto Mute Switch'
+		value.0 true
+		value.1 true
+		comment {
+			access 'read write'
+			type BOOLEAN
+			count 2
+		}
+	}
+	control.12 {
+		iface MIXER
+		name 'Volume Ramp Down Rate'
+		value '1 sample/update'
+		comment {
+			access 'read write'
+			type ENUMERATED
+			count 1
+			item.0 '1 sample/update'
+			item.1 '2 samples/update'
+			item.2 '4 samples/update'
+			item.3 Immediate
+		}
+	}
+	control.13 {
+		iface MIXER
+		name 'Volume Ramp Down Step'
+		value '1dB/step'
+		comment {
+			access 'read write'
+			type ENUMERATED
+			count 1
+			item.0 '4dB/step'
+			item.1 '2dB/step'
+			item.2 '1dB/step'
+			item.3 '0.5dB/step'
+		}
+	}
+	control.14 {
+		iface MIXER
+		name 'Volume Ramp Up Rate'
+		value '1 sample/update'
+		comment {
+			access 'read write'
+			type ENUMERATED
+			count 1
+			item.0 '1 sample/update'
+			item.1 '2 samples/update'
+			item.2 '4 samples/update'
+			item.3 Immediate
+		}
+	}
+	control.15 {
+		iface MIXER
+		name 'Volume Ramp Up Step'
+		value '1dB/step'
+		comment {
+			access 'read write'
+			type ENUMERATED
+			count 1
+			item.0 '4dB/step'
+			item.1 '2dB/step'
+			item.2 '1dB/step'
+			item.3 '0.5dB/step'
+		}
+	}
+	control.16 {
+		iface MIXER
+		name 'Volume Ramp Down Emergency Rate'
+		value '1 sample/update'
+		comment {
+			access 'read write'
+			type ENUMERATED
+			count 1
+			item.0 '1 sample/update'
+			item.1 '2 samples/update'
+			item.2 '4 samples/update'
+			item.3 Immediate
+		}
+	}
+	control.17 {
+		iface MIXER
+		name 'Volume Ramp Down Emergency Step'
+		value '4dB/step'
+		comment {
+			access 'read write'
+			type ENUMERATED
+			count 1
+			item.0 '4dB/step'
+			item.1 '2dB/step'
+			item.2 '1dB/step'
+			item.3 '0.5dB/step'
+		}
+	}
+	control.18 {
+		iface MIXER
+		name 'Max Overclock PLL'
+		value 0
+		comment {
+			access 'read write'
+			type INTEGER
+			count 1
+			range '0 - 20'
+		}
+	}
+	control.19 {
+		iface MIXER
+		name 'Max Overclock DSP'
+		value 0
+		comment {
+			access 'read write'
+			type INTEGER
+			count 1
+			range '0 - 40'
+		}
+	}
+	control.20 {
+		iface MIXER
+		name 'Max Overclock DAC'
+		value 0
+		comment {
+			access 'read write'
+			type INTEGER
+			count 1
+			range '0 - 40'
+		}
+	}
+	control.21 {
+		iface MIXER
+		name 'ADC Capture Volume'
+		value.0 104
+		value.1 104
+		comment {
+			access 'read write'
+			type INTEGER
+			count 2
+			range '0 - 104'
+			dbmin -1200
+			dbmax 4000
+			dbvalue.0 4000
+			dbvalue.1 4000
+		}
+	}
+	control.22 {
+		iface MIXER
+		name 'ADC Left Input'
+		value 'VINL1[SE]'
+		comment {
+			access 'read write'
+			type ENUMERATED
+			count 1
+			item.0 'No Select'
+			item.1 'VINL1[SE]'
+			item.2 'VINL2[SE]'
+			item.3 'VINL2[SE] + VINL1[SE]'
+			item.4 '{VIN1P, VIN1M}[DIFF]'
+		}
+	}
+	control.23 {
+		iface MIXER
+		name 'ADC Right Input'
+		value 'VINR1[SE]'
+		comment {
+			access 'read write'
+			type ENUMERATED
+			count 1
+			item.0 'No Select'
+			item.1 'VINR1[SE]'
+			item.2 'VINR2[SE]'
+			item.3 'VINR2[SE] + VINR1[SE]'
+			item.4 '{VIN2P, VIN2M}[DIFF]'
+		}
+	}
+	control.24 {
+		iface MIXER
+		name 'ADC Mic Bias'
+		value 'Mic Bias off'
+		comment {
+			access 'read write'
+			type ENUMERATED
+			count 1
+			item.0 'Mic Bias off'
+			item.1 'Mic Bias on'
+			item.2 'Mic Bias with Bypass Resistor'
+		}
+	}
+	control.25 {
+		iface MIXER
+		name 'PGA Gain Left'
+		value '40.0dB'
+		comment {
+			access 'read write'
+			type ENUMERATED
+			count 1
+			item.0 '-12.0dB'
+			item.1 '-11.5dB'
+			item.2 '-11.0dB'
+			item.3 '-10.5dB'
+			item.4 '-10.0dB'
+			item.5 '-9.5dB'
+			item.6 '-9.0dB'
+			item.7 '-8.5dB'
+			item.8 '-8.0dB'
+			item.9 '-7.5dB'
+			item.10 '-7.0dB'
+			item.11 '-6.5dB'
+			item.12 '-6.0dB'
+			item.13 '-5.5dB'
+			item.14 '-5.0dB'
+			item.15 '-4.5dB'
+			item.16 '-4.0dB'
+			item.17 '-3.5dB'
+			item.18 '-3.0dB'
+			item.19 '-2.5dB'
+			item.20 '-2.0dB'
+			item.21 '-1.5dB'
+			item.22 '-1.0dB'
+			item.23 '-0.5dB'
+			item.24 '0.0dB'
+			item.25 '0.5dB'
+			item.26 '1.0dB'
+			item.27 '1.5dB'
+			item.28 '2.0dB'
+			item.29 '2.5dB'
+			item.30 '3.0dB'
+			item.31 '3.5dB'
+			item.32 '4.0dB'
+			item.33 '4.5dB'
+			item.34 '5.0dB'
+			item.35 '5.5dB'
+			item.36 '6.0dB'
+			item.37 '6.5dB'
+			item.38 '7.0dB'
+			item.39 '7.5dB'
+			item.40 '8.0dB'
+			item.41 '8.5dB'
+			item.42 '9.0dB'
+			item.43 '9.5dB'
+			item.44 '10.0dB'
+			item.45 '10.5dB'
+			item.46 '11.0dB'
+			item.47 '11.5dB'
+			item.48 '12.0dB'
+			item.49 '12.5dB'
+			item.50 '13.0dB'
+			item.51 '13.5dB'
+			item.52 '14.0dB'
+			item.53 '14.5dB'
+			item.54 '15.0dB'
+			item.55 '15.5dB'
+			item.56 '16.0dB'
+			item.57 '16.5dB'
+			item.58 '17.0dB'
+			item.59 '17.5dB'
+			item.60 '18.0dB'
+			item.61 '18.5dB'
+			item.62 '19.0dB'
+			item.63 '19.5dB'
+			item.64 '20.0dB'
+			item.65 '20.5dB'
+			item.66 '21.0dB'
+			item.67 '21.5dB'
+			item.68 '22.0dB'
+			item.69 '22.5dB'
+			item.70 '23.0dB'
+			item.71 '23.5dB'
+			item.72 '24.0dB'
+			item.73 '24.5dB'
+			item.74 '25.0dB'
+			item.75 '25.5dB'
+			item.76 '26.0dB'
+			item.77 '26.5dB'
+			item.78 '27.0dB'
+			item.79 '27.5dB'
+			item.80 '28.0dB'
+			item.81 '28.5dB'
+			item.82 '29.0dB'
+			item.83 '29.5dB'
+			item.84 '30.0dB'
+			item.85 '30.5dB'
+			item.86 '31.0dB'
+			item.87 '31.5dB'
+			item.88 '32.0dB'
+			item.89 '32.5dB'
+			item.90 '33.0dB'
+			item.91 '33.5dB'
+			item.92 '34.0dB'
+			item.93 '34.5dB'
+			item.94 '35.0dB'
+			item.95 '35.5dB'
+			item.96 '36.0dB'
+			item.97 '36.5dB'
+			item.98 '37.0dB'
+			item.99 '37.5dB'
+			item.100 '38.0dB'
+			item.101 '38.5dB'
+			item.102 '39.0dB'
+			item.103 '39.5dB'
+			item.104 '40.0dB'
+		}
+	}
+	control.26 {
+		iface MIXER
+		name 'PGA Gain Right'
+		value '40.0dB'
+		comment {
+			access 'read write'
+			type ENUMERATED
+			count 1
+			item.0 '-12.0dB'
+			item.1 '-11.5dB'
+			item.2 '-11.0dB'
+			item.3 '-10.5dB'
+			item.4 '-10.0dB'
+			item.5 '-9.5dB'
+			item.6 '-9.0dB'
+			item.7 '-8.5dB'
+			item.8 '-8.0dB'
+			item.9 '-7.5dB'
+			item.10 '-7.0dB'
+			item.11 '-6.5dB'
+			item.12 '-6.0dB'
+			item.13 '-5.5dB'
+			item.14 '-5.0dB'
+			item.15 '-4.5dB'
+			item.16 '-4.0dB'
+			item.17 '-3.5dB'
+			item.18 '-3.0dB'
+			item.19 '-2.5dB'
+			item.20 '-2.0dB'
+			item.21 '-1.5dB'
+			item.22 '-1.0dB'
+			item.23 '-0.5dB'
+			item.24 '0.0dB'
+			item.25 '0.5dB'
+			item.26 '1.0dB'
+			item.27 '1.5dB'
+			item.28 '2.0dB'
+			item.29 '2.5dB'
+			item.30 '3.0dB'
+			item.31 '3.5dB'
+			item.32 '4.0dB'
+			item.33 '4.5dB'
+			item.34 '5.0dB'
+			item.35 '5.5dB'
+			item.36 '6.0dB'
+			item.37 '6.5dB'
+			item.38 '7.0dB'
+			item.39 '7.5dB'
+			item.40 '8.0dB'
+			item.41 '8.5dB'
+			item.42 '9.0dB'
+			item.43 '9.5dB'
+			item.44 '10.0dB'
+			item.45 '10.5dB'
+			item.46 '11.0dB'
+			item.47 '11.5dB'
+			item.48 '12.0dB'
+			item.49 '12.5dB'
+			item.50 '13.0dB'
+			item.51 '13.5dB'
+			item.52 '14.0dB'
+			item.53 '14.5dB'
+			item.54 '15.0dB'
+			item.55 '15.5dB'
+			item.56 '16.0dB'
+			item.57 '16.5dB'
+			item.58 '17.0dB'
+			item.59 '17.5dB'
+			item.60 '18.0dB'
+			item.61 '18.5dB'
+			item.62 '19.0dB'
+			item.63 '19.5dB'
+			item.64 '20.0dB'
+			item.65 '20.5dB'
+			item.66 '21.0dB'
+			item.67 '21.5dB'
+			item.68 '22.0dB'
+			item.69 '22.5dB'
+			item.70 '23.0dB'
+			item.71 '23.5dB'
+			item.72 '24.0dB'
+			item.73 '24.5dB'
+			item.74 '25.0dB'
+			item.75 '25.5dB'
+			item.76 '26.0dB'
+			item.77 '26.5dB'
+			item.78 '27.0dB'
+			item.79 '27.5dB'
+			item.80 '28.0dB'
+			item.81 '28.5dB'
+			item.82 '29.0dB'
+			item.83 '29.5dB'
+			item.84 '30.0dB'
+			item.85 '30.5dB'
+			item.86 '31.0dB'
+			item.87 '31.5dB'
+			item.88 '32.0dB'
+			item.89 '32.5dB'
+			item.90 '33.0dB'
+			item.91 '33.5dB'
+			item.92 '34.0dB'
+			item.93 '34.5dB'
+			item.94 '35.0dB'
+			item.95 '35.5dB'
+			item.96 '36.0dB'
+			item.97 '36.5dB'
+			item.98 '37.0dB'
+			item.99 '37.5dB'
+			item.100 '38.0dB'
+			item.101 '38.5dB'
+			item.102 '39.0dB'
+			item.103 '39.5dB'
+			item.104 '40.0dB'
+		}
+	}
+	control.27 {
+		iface MIXER
+		name 'ADC Left Capture Source'
+		value 'VINL1[SE]'
+		comment {
+			access 'read write'
+			type ENUMERATED
+			count 1
+			item.0 'No Select'
+			item.1 'VINL1[SE]'
+			item.2 'VINL2[SE]'
+			item.3 'VINL2[SE] + VINL1[SE]'
+			item.4 'VINL3[SE]'
+			item.5 'VINL3[SE] + VINL1[SE]'
+			item.6 'VINL3[SE] + VINL2[SE]'
+			item.7 'VINL3[SE] + VINL2[SE] + VINL1[SE]'
+			item.8 'VINL4[SE]'
+			item.9 'VINL4[SE] + VINL1[SE]'
+			item.10 'VINL4[SE] + VINL2[SE]'
+			item.11 'VINL4[SE] + VINL2[SE] + VINL1[SE]'
+			item.12 'VINL4[SE] + VINL3[SE]'
+			item.13 'VINL4[SE] + VINL3[SE] + VINL1[SE]'
+			item.14 'VINL4[SE] + VINL3[SE] + VINL2[SE]'
+			item.15 'VINL4[SE] + VINL3[SE] + VINL2[SE] + VINL1[SE]'
+			item.16 '{VIN1P, VIN1M}[DIFF]'
+			item.17 '{VIN4P, VIN4M}[DIFF]'
+			item.18 '{VIN1P, VIN1M}[DIFF] + {VIN4P, VIN4M}[DIFF]'
+		}
+	}
+	control.28 {
+		iface MIXER
+		name 'ADC Right Capture Source'
+		value 'VINR1[SE]'
+		comment {
+			access 'read write'
+			type ENUMERATED
+			count 1
+			item.0 'No Select'
+			item.1 'VINR1[SE]'
+			item.2 'VINR2[SE]'
+			item.3 'VINR2[SE] + VINR1[SE]'
+			item.4 'VINR3[SE]'
+			item.5 'VINR3[SE] + VINR1[SE]'
+			item.6 'VINR3[SE] + VINR2[SE]'
+			item.7 'VINR3[SE] + VINR2[SE] + VINR1[SE]'
+			item.8 'VINR4[SE]'
+			item.9 'VINR4[SE] + VINR1[SE]'
+			item.10 'VINR4[SE] + VINR2[SE]'
+			item.11 'VINR4[SE] + VINR2[SE] + VINR1[SE]'
+			item.12 'VINR4[SE] + VINR3[SE]'
+			item.13 'VINR4[SE] + VINR3[SE] + VINR1[SE]'
+			item.14 'VINR4[SE] + VINR3[SE] + VINR2[SE]'
+			item.15 'VINR4[SE] + VINR3[SE] + VINR2[SE] + VINR1[SE]'
+			item.16 '{VIN2P, VIN2M}[DIFF]'
+			item.17 '{VIN3P, VIN3M}[DIFF]'
+			item.18 '{VIN2P, VIN2M}[DIFF] + {VIN3P, VIN3M}[DIFF]'
+		}
+	}
+}

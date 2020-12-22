@@ -1,0 +1,17 @@
+[Unit]
+Description=JackTrip-Patches
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=root
+Group=root
+ExecStart=/usr/local/bin/jacktrip-patches.sh
+Restart=no
+StandardOutput=journal
+StandardError=inherit
+SyslogIdentifier=jacktrip-patches
+
+[Install]
+WantedBy=jacktrip-agent.service

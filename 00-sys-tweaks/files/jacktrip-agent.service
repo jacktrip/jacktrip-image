@@ -1,0 +1,18 @@
+[Unit]
+Description=JackTrip-Agent
+After=network.target jacktrip-patches.service jacktrip-init.service
+
+[Service]
+Type=simple
+User=root
+Group=root
+EnvironmentFile=-/etc/default/jacktrip-agent
+ExecStart=/usr/local/bin/jacktrip-agent $AGENT_OPTS
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=inherit
+SyslogIdentifier=jacktrip-agent
+
+[Install]
+WantedBy=multi-user.target

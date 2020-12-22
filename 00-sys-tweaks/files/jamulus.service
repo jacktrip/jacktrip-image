@@ -1,0 +1,29 @@
+[Unit]
+Description=Jamulus-Client
+After=network.target jack.service
+
+[Service]
+Type=simple
+User=jacktrip
+Group=audio
+NoNewPrivileges=true
+ProtectSystem=true
+ProtectHome=true
+Nice=-20
+IOSchedulingClass=realtime
+IOSchedulingPriority=0
+Environment="JACK_NO_AUDIO_RESERVATION=1"
+Environment="JACK_NO_START_SERVER=1"
+ExecStartPre=jack_wait -w -t 5
+EnvironmentFile=/tmp/default/jamulus
+ExecStart=/usr/local/bin/Jamulus $JAMULUS_OPTS
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=inherit
+SyslogIdentifier=jamulus
+LimitMEMLOCK=infinity
+LimitRTPRIO=99
+
+[Install]
+WantedBy=multi-user.target

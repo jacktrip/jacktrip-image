@@ -1,0 +1,23 @@
+[Unit]
+Description=JackTrip-Clock
+After=jacktrip-init.service ntp.service
+
+[Service]
+Type=oneshot
+User=root
+Group=root
+ExecStartPre=/usr/sbin/ntp-wait
+ExecStartPre=/bin/mount -o remount,rw /
+ExecStart=/usr/sbin/fake-hwclock save
+ExecStartPost=/bin/mount -o remount,ro /
+ExecStop=/bin/mount -o remount,rw /
+ExecStop=/usr/sbin/fake-hwclock save
+ExecStop=/bin/mount -o remount,ro /
+Restart=no
+RemainAfterExit=yes
+StandardOutput=journal
+StandardError=inherit
+SyslogIdentifier=jacktrip-clock
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,154 @@
+diff --git a/Dockerfile b/Dockerfile
+index 2e53149..d680d7f 100644
+--- a/Dockerfile
++++ b/Dockerfile
+@@ -1,4 +1,4 @@
+-FROM debian:buster
++FROM i386/debian:buster
+ 
+ ENV DEBIAN_FRONTEND noninteractive
+ 
+diff --git a/build-docker.sh b/build-docker.sh
+index b6a9ea3..ce5aa09 100755
+--- a/build-docker.sh
++++ b/build-docker.sh
+@@ -89,6 +89,8 @@ else
+ 	trap 'echo "got CTRL+C... please wait 5s" && ${DOCKER} stop -t 5 ${CONTAINER_NAME}' SIGINT SIGTERM
+ 	time ${DOCKER} run --name "${CONTAINER_NAME}" --privileged \
+ 		--volume "${CONFIG_FILE}":/config:ro \
++		--volume "${DIR}/work":/pi-gen/work \
++		--volume "${DIR}/deploy":/pi-gen/deploy \
+ 		-e "GIT_HASH=${GIT_HASH}" \
+ 		pi-gen \
+ 		bash -e -o pipefail -c "dpkg-reconfigure qemu-user-static &&
+@@ -97,7 +99,7 @@ else
+ 	wait "$!"
+ fi
+ echo "copying results from deploy/"
+-${DOCKER} cp "${CONTAINER_NAME}":/pi-gen/deploy .
++#${DOCKER} cp "${CONTAINER_NAME}":/pi-gen/deploy .
+ ls -lah deploy
+ 
+ # cleanup
+diff --git a/stage2/01-sys-tweaks/00-packages b/stage2/01-sys-tweaks/00-packages
+index 16b9350..d3f9e65 100644
+--- a/stage2/01-sys-tweaks/00-packages
++++ b/stage2/01-sys-tweaks/00-packages
+@@ -1,30 +1,13 @@
+ ssh less fbset sudo psmisc strace ed ncdu crda
+ console-setup keyboard-configuration debconf-utils parted unzip
+-build-essential manpages-dev python bash-completion gdb pkg-config
+-python-rpi.gpio v4l-utils
+ avahi-daemon
+-lua5.1
+-luajit
+ hardlink ca-certificates curl
+-fake-hwclock nfs-common usbutils
+-libraspberrypi-dev libraspberrypi-doc libfreetype6-dev
+-dosfstools
+-dphys-swapfile
++fake-hwclock
+ raspberrypi-sys-mods
+-pi-bluetooth
+-apt-listchanges
+-usb-modeswitch
+ libpam-chksshpwd
+ rpi-update
+-libmtp-runtime
+-rsync
+-htop
+-man-db
+-policykit-1
+ ssh-import-id
+ rng-tools
+-ethtool
+ vl805fw
+-ntfs-3g
+ pciutils
+ rpi-eeprom
+diff --git a/stage2/01-sys-tweaks/00-packages-nr b/stage2/01-sys-tweaks/00-packages-nr
+deleted file mode 100644
+index 5acef54..0000000
+--- a/stage2/01-sys-tweaks/00-packages-nr
++++ /dev/null
+@@ -1 +0,0 @@
+-cifs-utils
+diff --git a/stage2/01-sys-tweaks/00-patches/02-swap.diff b/stage2/01-sys-tweaks/00-patches/02-swap.diff
+deleted file mode 100644
+index 745a344..0000000
+--- a/stage2/01-sys-tweaks/00-patches/02-swap.diff
++++ /dev/null
+@@ -1,13 +0,0 @@
+-Index: jessie-stage2/rootfs/etc/dphys-swapfile
+-===================================================================
+---- jessie-stage2.orig/rootfs/etc/dphys-swapfile
+-+++ jessie-stage2/rootfs/etc/dphys-swapfile
+-@@ -13,7 +13,7 @@
+- 
+- # set size to absolute value, leaving empty (default) then uses computed value
+- #   you most likely don't want this, unless you have an special disk situation
+--#CONF_SWAPSIZE=
+-+CONF_SWAPSIZE=100
+- 
+- # set size to computed value, this times RAM size, dynamically adapts,
+- #   guarantees that there is enough swap without wasting disk space on excess
+diff --git a/stage2/01-sys-tweaks/00-patches/series b/stage2/01-sys-tweaks/00-patches/series
+index aee0402..c5d8e4b 100644
+--- a/stage2/01-sys-tweaks/00-patches/series
++++ b/stage2/01-sys-tweaks/00-patches/series
+@@ -1,5 +1,4 @@
+ 01-useradd.diff
+-02-swap.diff
+ 04-inputrc.diff
+ 05-path.diff
+ 07-resize-init.diff
+diff --git a/stage2/01-sys-tweaks/01-run.sh b/stage2/01-sys-tweaks/01-run.sh
+index 8d28adc..f7dd473 100755
+--- a/stage2/01-sys-tweaks/01-run.sh
++++ b/stage2/01-sys-tweaks/01-run.sh
+@@ -13,8 +13,8 @@ install -m 755 files/rc.local		"${ROOTFS_DIR}/etc/"
+ 
+ on_chroot << EOF
+ systemctl disable hwclock.sh
+-systemctl disable nfs-common
+-systemctl disable rpcbind
++#systemctl disable nfs-common
++#systemctl disable rpcbind
+ if [ "${ENABLE_SSH}" == "1" ]; then
+ 	systemctl enable ssh
+ else
+diff --git a/stage2/02-net-tweaks/00-packages b/stage2/02-net-tweaks/00-packages
+index cc4a68e..0e36e7a 100644
+--- a/stage2/02-net-tweaks/00-packages
++++ b/stage2/02-net-tweaks/00-packages
+@@ -1,4 +1,3 @@
+-wpasupplicant wireless-tools firmware-atheros firmware-brcm80211 firmware-libertas firmware-misc-nonfree firmware-realtek
+ raspberrypi-net-mods
+ dhcpcd5
+ net-tools
+diff --git a/stage2/03-accept-mathematica-eula/00-debconf b/stage2/03-accept-mathematica-eula/00-debconf
+deleted file mode 100644
+index d9743fe..0000000
+--- a/stage2/03-accept-mathematica-eula/00-debconf
++++ /dev/null
+@@ -1,2 +0,0 @@
+-# Do you accept the Wolfram - Raspberry Pi® Bundle License Agreement?
+-wolfram-engine  shared/accepted-wolfram-eula    boolean true
+diff --git a/stage2/EXPORT_IMAGE b/stage2/EXPORT_IMAGE
+deleted file mode 100644
+index aa8f936..0000000
+--- a/stage2/EXPORT_IMAGE
++++ /dev/null
+@@ -1,4 +0,0 @@
+-IMG_SUFFIX="-lite"
+-if [ "${USE_QEMU}" = "1" ]; then
+-	export IMG_SUFFIX="${IMG_SUFFIX}-qemu"
+-fi
+diff --git a/stage2/EXPORT_NOOBS b/stage2/EXPORT_NOOBS
+deleted file mode 100644
+index 136cc77..0000000
+--- a/stage2/EXPORT_NOOBS
++++ /dev/null
+@@ -1,2 +0,0 @@
+-NOOBS_NAME="Raspbian Lite"
+-NOOBS_DESCRIPTION="A port of Debian with no desktop environment"
