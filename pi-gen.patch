@@ -1,18 +1,8 @@
-diff --git a/Dockerfile b/Dockerfile
-index 2e53149..d680d7f 100644
---- a/Dockerfile
-+++ b/Dockerfile
-@@ -1,4 +1,4 @@
--FROM debian:buster
-+FROM i386/debian:buster
- 
- ENV DEBIAN_FRONTEND noninteractive
- 
 diff --git a/build-docker.sh b/build-docker.sh
-index b6a9ea3..ce5aa09 100755
+index 350f722..92e8bf6 100755
 --- a/build-docker.sh
 +++ b/build-docker.sh
-@@ -89,6 +89,8 @@ else
+@@ -99,6 +99,8 @@ else
  	trap 'echo "got CTRL+C... please wait 5s" && ${DOCKER} stop -t 5 ${CONTAINER_NAME}' SIGINT SIGTERM
  	time ${DOCKER} run --name "${CONTAINER_NAME}" --privileged \
  		--volume "${CONFIG_FILE}":/config:ro \
@@ -21,7 +11,7 @@ index b6a9ea3..ce5aa09 100755
  		-e "GIT_HASH=${GIT_HASH}" \
  		pi-gen \
  		bash -e -o pipefail -c "dpkg-reconfigure qemu-user-static &&
-@@ -97,7 +99,7 @@ else
+@@ -107,7 +109,7 @@ else
  	wait "$!"
  fi
  echo "copying results from deploy/"
@@ -31,10 +21,10 @@ index b6a9ea3..ce5aa09 100755
  
  # cleanup
 diff --git a/stage2/01-sys-tweaks/00-packages b/stage2/01-sys-tweaks/00-packages
-index 16b9350..d3f9e65 100644
+index 83ec74c..aa1f6dc 100644
 --- a/stage2/01-sys-tweaks/00-packages
 +++ b/stage2/01-sys-tweaks/00-packages
-@@ -1,30 +1,13 @@
+@@ -1,31 +1,14 @@
  ssh less fbset sudo psmisc strace ed ncdu crda
  console-setup keyboard-configuration debconf-utils parted unzip
 -build-essential manpages-dev python bash-completion gdb pkg-config
@@ -66,6 +56,7 @@ index 16b9350..d3f9e65 100644
 -ntfs-3g
  pciutils
  rpi-eeprom
+ raspinfo
 diff --git a/stage2/01-sys-tweaks/00-packages-nr b/stage2/01-sys-tweaks/00-packages-nr
 deleted file mode 100644
 index 5acef54..0000000
@@ -103,10 +94,10 @@ index aee0402..c5d8e4b 100644
  05-path.diff
  07-resize-init.diff
 diff --git a/stage2/01-sys-tweaks/01-run.sh b/stage2/01-sys-tweaks/01-run.sh
-index 8d28adc..f7dd473 100755
+index c1836f9..9a3672a 100755
 --- a/stage2/01-sys-tweaks/01-run.sh
 +++ b/stage2/01-sys-tweaks/01-run.sh
-@@ -13,8 +13,8 @@ install -m 755 files/rc.local		"${ROOTFS_DIR}/etc/"
+@@ -25,8 +25,8 @@ fi
  
  on_chroot << EOF
  systemctl disable hwclock.sh
@@ -146,9 +137,9 @@ index aa8f936..0000000
 -fi
 diff --git a/stage2/EXPORT_NOOBS b/stage2/EXPORT_NOOBS
 deleted file mode 100644
-index 136cc77..0000000
+index 0d78ecf..0000000
 --- a/stage2/EXPORT_NOOBS
 +++ /dev/null
 @@ -1,2 +0,0 @@
--NOOBS_NAME="Raspbian Lite"
+-NOOBS_NAME="Raspberry Pi OS Lite (32-bit)"
 -NOOBS_DESCRIPTION="A port of Debian with no desktop environment"
