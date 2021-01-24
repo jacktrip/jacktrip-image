@@ -4,6 +4,8 @@
 # Copyright (c) 2020 JackTrip Foundation
 
 CONFIG_DIR=/etc/jacktrip
+ETC_AVAHI_SERVICES_DIR=/etc/avahi/services
+TMP_AVAHI_SERVICES_DIR=/tmp/avahi/services
 CREDENTIALS_FILE="${CONFIG_DIR}/credentials"
 DEVICENAME_FILE="${CONFIG_DIR}/devicename"
 DEVICETYPE_FILE="${CONFIG_DIR}/devicetype"
@@ -214,6 +216,29 @@ $APLAY
 EOF
 }
 
+# update avahi services directory
+function update_avahi_services {
+	# Ensure etc services directory exists
+	if [ ! -d ${ETC_AVAHI_SERVICES_DIR} ]; then
+		mkdir -p ${ETC_AVAHI_SERVICES_DIR}
+	fi
+
+	# Ensure tmp services directory exists
+	if [ ! -d ${TMP_AVAHI_SERVICES_DIR} ]; then
+		mkdir -p ${TMP_AVAHI_SERVICES_DIR}
+	fi
+
+	# make sure ssh service file exists in tmp
+	if [ ! -f "${TMP_AVAHI_SERVICES_DIR}/ssh.service" ]; then
+		cp "/usr/share/doc/avahi-daemon/examples/ssh.service" "${TMP_AVAHI_SERVICES_DIR}/ssh.service"
+	fi
+
+	# bind mount tmp services to etc services
+	mount --bind $TMP_AVAHI_SERVICES_DIR $ETC_AVAHI_SERVICES_DIR
+	systemctl restart avahi-daemon
+}
+
+
 # Remount volumes read-write
 mount -o remount,rw /
 mount -o remount,rw /boot
@@ -221,6 +246,7 @@ mount -o remount,rw /boot
 # update device and issue file
 update_device
 update_issue
+update_avahi_services
 
 # Remount volumes read-only
 mount -o remount,ro /
