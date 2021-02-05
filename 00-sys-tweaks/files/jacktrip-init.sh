@@ -98,63 +98,30 @@ function detect_card {
 		fi
 	fi
 
-	# Check HiFiBerry DAC+ ADC Std (already configured via dtoverlay)
-	verify_card "sndrpihifiberry" "snd_rpi_hifiberry_dacplusadc"
-	if [ "$DEVICETYPE" != "" ]; then
-		return
+	if [ "$HATCARD" != "" ]; then
+		# Check HiFiBerry DAC+ ADC Std (via dtoverlay dynamic load)
+		add_overlay hifiberry-dacplusadc
+		verify_card "sndrpihifiberry" "snd_rpi_hifiberry_dacplusadc"
+		if [ "$DEVICETYPE" != "" ]; then
+			return
+		fi
+		remove_overlay hifiberry-dacplusadc
+
+		# Check Audio Injector Stereo (via dtoverlay dynamic load)
+		add_overlay audioinjector-wm8731-audio
+		verify_card "audioinjectorpi" "audioinjector-pi-soundcard"
+		if [ "$DEVICETYPE" != "" ]; then
+			return
+		fi
+		remove_overlay audioinjector-wm8731-audio
 	fi
 
-	# Check Pisound (setup via HAT EEPROM)
-	verify_card "pisound" "pisound"
+	# All USB devices, no overlays necessary
+	DEVICENAME=$(aplay -l | grep -m 1 'card 1' | sed 's/card 1: \([^]]\+\) \[\([^]]\+\)\].*$/\1/')
+	DEVICETYPE=$(aplay -l | grep -m 1 'card 1' | sed 's/card 1: \([^]]\+\) \[\([^]]\+\)\].*$/\2/')
 	if [ "$DEVICETYPE" != "" ]; then
 		return
 	fi
-
-	# Check Audio Injector Stereo (already configured via dtoverlay)
-	verify_card "audioinjectorpi" "audioinjector-pi-soundcard"
-	if [ "$DEVICETYPE" != "" ]; then
-		return
-	fi
-
-	# Check FocusRite Scarlett 2i2 USB (no overlays necessary)
-	verify_card "USB" "Scarlett 2i2 USB"
-	if [ "$DEVICETYPE" != "" ]; then
-		return
-	fi
-
-	# Check Presonus AudioBox USB 96 device (no overlays necessary)
-	verify_card "A96" "AudioBox USB 96"
-	if [ "$DEVICETYPE" != "" ]; then
-		return
-	fi
-
-	# Check USB Audio device (no overlays necessary)
-	verify_card "Device" "USB Audio Device"
-	if [ "$DEVICETYPE" != "" ]; then
-		return
-	fi
-
-	# Check USB PnP Sound Device (no overlays necessary)
-	verify_card "Device" "USB PnP Sound Device"
-	if [ "$DEVICETYPE" != "" ]; then
-		return
-	fi
-
-	# Check HiFiBerry DAC+ ADC Std (via dtoverlay dynamic load)
-	add_overlay hifiberry-dacplusadc
-	verify_card "sndrpihifiberry" "snd_rpi_hifiberry_dacplusadc"
-	if [ "$DEVICETYPE" != "" ]; then
-		return
-	fi
-	remove_overlay hifiberry-dacplusadc
-
-	# Check Audio Injector Stereo (via dtoverlay dynamic load)
-	add_overlay audioinjector-wm8731-audio
-	verify_card "audioinjectorpi" "audioinjector-pi-soundcard"
-	if [ "$DEVICETYPE" != "" ]; then
-		return
-	fi
-	remove_overlay audioinjector-wm8731-audio
 
 	return -1
 }
