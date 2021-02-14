@@ -21,10 +21,10 @@ index 350f722..92e8bf6 100755
  
  # cleanup
 diff --git a/stage2/01-sys-tweaks/00-packages b/stage2/01-sys-tweaks/00-packages
-index 83ec74c..aa1f6dc 100644
+index 83ec74c..5ade53d 100644
 --- a/stage2/01-sys-tweaks/00-packages
 +++ b/stage2/01-sys-tweaks/00-packages
-@@ -1,31 +1,14 @@
+@@ -1,31 +1,15 @@
  ssh less fbset sudo psmisc strace ed ncdu crda
  console-setup keyboard-configuration debconf-utils parted unzip
 -build-essential manpages-dev python bash-completion gdb pkg-config
@@ -39,7 +39,7 @@ index 83ec74c..aa1f6dc 100644
 -dphys-swapfile
 +fake-hwclock
  raspberrypi-sys-mods
--pi-bluetooth
+ pi-bluetooth
 -apt-listchanges
 -usb-modeswitch
  libpam-chksshpwd

@@ -98,30 +98,31 @@ function detect_card {
 		fi
 	fi
 
+	# Assume that the first ALSA card is the one we want to use (if it exists)
+	DEVICETYPE=$(aplay -l 2> /dev/null | grep -m 1 'card [0-9]\+:' | sed 's/card [0-9]\+: \([^]]\+\) \[\([^]]\+\)\].*$/\2/')
+	if [ "$DEVICETYPE" != "" ]; then
+		DEVICENAME=$(aplay -l 2> /dev/null | grep -m 1 'card [0-9]\+:' | sed 's/card [0-9]\+: \([^]]\+\) \[\([^]]\+\)\].*$/\1/')
+		return
+	fi
 	if [ "$HATCARD" != "" ]; then
-		# Check HiFiBerry DAC+ ADC Std (via dtoverlay dynamic load)
-		add_overlay hifiberry-dacplusadc
-		verify_card "sndrpihifiberry" "snd_rpi_hifiberry_dacplusadc"
-		if [ "$DEVICETYPE" != "" ]; then
-			return
-		fi
-		remove_overlay hifiberry-dacplusadc
-
-		# Check Audio Injector Stereo (via dtoverlay dynamic load)
-		add_overlay audioinjector-wm8731-audio
-		verify_card "audioinjectorpi" "audioinjector-pi-soundcard"
-		if [ "$DEVICETYPE" != "" ]; then
-			return
-		fi
-		remove_overlay audioinjector-wm8731-audio
+		return -1
 	fi
 
-	# All USB devices, no overlays necessary
-	DEVICENAME=$(aplay -l | grep -m 1 'card 1' | sed 's/card 1: \([^]]\+\) \[\([^]]\+\)\].*$/\1/')
-	DEVICETYPE=$(aplay -l | grep -m 1 'card 1' | sed 's/card 1: \([^]]\+\) \[\([^]]\+\)\].*$/\2/')
+	# Check HiFiBerry DAC+ ADC Std (via dtoverlay dynamic load)
+	add_overlay hifiberry-dacplusadc
+	verify_card "sndrpihifiberry" "snd_rpi_hifiberry_dacplusadc"
 	if [ "$DEVICETYPE" != "" ]; then
 		return
 	fi
+	remove_overlay hifiberry-dacplusadc
+
+	# Check Audio Injector Stereo (via dtoverlay dynamic load)
+	add_overlay audioinjector-wm8731-audio
+	verify_card "audioinjectorpi" "audioinjector-pi-soundcard"
+	if [ "$DEVICETYPE" != "" ]; then
+		return
+	fi
+	remove_overlay audioinjector-wm8731-audio
 
 	return -1
 }
@@ -152,14 +153,6 @@ function update_device {
 		echo "Updating ${DEVICETYPE_FILE}"
 		echo $DEVICETYPE > ${DEVICETYPE_FILE}
 	fi
-
-	# Generate credentials, if necessary
-	if [ ! `grep "^[a-zA-Z0-9]*\.[a-zA-Z0-9]*$" ${CREDENTIALS_FILE}` ]; then
-		echo "Generating new credentials file: ${CREDENTIALS_FILE}"
-		API_PREFIX=`random_string 7`
-		API_SECRET=`random_string 32`
-		echo "${API_PREFIX}.${API_SECRET}" > ${CREDENTIALS_FILE}
-	fi
 }
 
 # update /etc/issue
@@ -181,6 +174,41 @@ My MAC address is $MAC
 $APLAY
 
 EOF
+}
+
+# update API credentials, if necessary
+function update_credentials {
+	if [ ! `grep "^[a-zA-Z0-9]*\.[a-zA-Z0-9]*$" ${CREDENTIALS_FILE}` ]; then
+		echo "Generating new credentials file: ${CREDENTIALS_FILE}"
+		API_PREFIX=`random_string 7`
+		API_SECRET=`random_string 32`
+		echo "${API_PREFIX}.${API_SECRET}" > ${CREDENTIALS_FILE}
+	fi
+}
+
+# update bluetooth config and start beacon
+function update_bluetooth {
+	MACADDR=`cat /sys/class/net/eth0/address`
+
+	# Set bluetooth device name
+	#if [ ! -f /etc/machine-info ]; then
+	#	echo "PRETTY_HOSTNAME=\"JackTrip ${MACADDR}\"" > /etc/machine-info
+	#	systemctl restart bluetooth
+	#	hciconfig hci0 up
+	#fi
+
+	# Advertise Eddystone URL beacon for the device
+	EDDYSTONE_BASE="1F 02 01 06 03 03 aa fe 17 16 aa fe 10 00 03"
+	JKTP_NET_BASE="6a 6b 74 70 03"
+	MACBASE64=`echo ${MACADDR} | xxd -r -p | base64`
+	APISALT=`head -c3 /etc/jacktrip/credentials`
+	URLDATA=`echo "d${MACBASE64}${APISALT}" | hexdump -v -e '/1 "%02x "' -n 12`
+	hcitool -i hci0 cmd 0x08 0x0008 ${EDDYSTONE_BASE} ${JKTP_NET_BASE} ${URLDATA}
+	echo "Broadcasting BLE Eddystone Beacon: https://jktp.net/d${MACBASE64}${APISALT}"
+
+	# Advertise but don't allow connections
+	hciconfig hci0 leadv 3
+	hciconfig hci0 noscan
 }
 
 # update avahi services directory
@@ -210,10 +238,12 @@ function update_avahi_services {
 mount -o remount,rw /
 mount -o remount,rw /boot
 
-# update device and issue file
-update_device
+# initialize config and services
 update_issue
+update_credentials
+update_bluetooth
 update_avahi_services
+update_device
 
 # Remount volumes read-only
 mount -o remount,ro /

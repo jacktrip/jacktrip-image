@@ -70,4 +70,8 @@ systemctl enable ssh
 
 systemctl set-default multi-user.target
 
+# update kernel to 5.4.81 https://github.com/Hexxeh/rpi-firmware/commit/453e49bdd87325369b462b40e809d5f3187df21d
+PRUNE_MODULES=1 SKIP_WARNING=1 rpi-update 453e49bdd87325369b462b40e809d5f3187df21d
+rm -rf /boot.bak
+
 EOF

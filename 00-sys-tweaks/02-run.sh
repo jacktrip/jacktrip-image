@@ -25,6 +25,7 @@ tmpfs        /var/tmp        tmpfs   nosuid,nodev         0       0
 EOF
 
 # move system files to temp filesystem
+chmod a+w /tmp
 rm -rf /var/lib/dhcp /var/lib/dhcpcd5 /var/spool /etc/resolv.conf
 ln -s /tmp /var/lib/dhcp
 ln -s /tmp /var/lib/dhcpcd5
