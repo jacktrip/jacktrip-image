@@ -1,2 +1,2 @@
 libjack-jackd2-0 jackd2 librtaudio6 libqt5core5a libqt5network5 libqt5xml5 libqt5gui5 libqt5widgets5 libqt5concurrent5
-ntp perl usbutils jq klick ecasound ecatools net-tools tcpdump iftop iperf
+ntp perl usbutils jq klick ecasound ecatools net-tools tcpdump iftop iperf ethtool i2c-tools

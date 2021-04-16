@@ -91,6 +91,7 @@ function detect_card {
 		# try enabling overlay
 		ini_ensure '.*dtoverlay=hifiberry.*' 'dtoverlay=hifiberry-dacplusadcpro'
 		sync
+		sleep 5
 		reboot
 	else
 		if [ `grep "^dtoverlay=hifiberry-dacplusadcpro" /boot/config.txt` ]; then
@@ -246,5 +247,6 @@ update_avahi_services
 update_device
 
 # Remount volumes read-only
+sync
 mount -o remount,ro /
 mount -o remount,ro /boot

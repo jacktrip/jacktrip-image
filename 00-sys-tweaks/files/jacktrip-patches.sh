@@ -94,4 +94,5 @@ mount -o remount,rw /
 check_patches
 
 # Remount root read-only
+sync
 mount -o remount,ro /

@@ -1,19 +1,19 @@
 diff --git a/build-docker.sh b/build-docker.sh
-index 350f722..92e8bf6 100755
+index 5d31f86..2c9759e 100755
 --- a/build-docker.sh
 +++ b/build-docker.sh
-@@ -99,6 +99,8 @@ else
- 	trap 'echo "got CTRL+C... please wait 5s" && ${DOCKER} stop -t 5 ${CONTAINER_NAME}' SIGINT SIGTERM
- 	time ${DOCKER} run --name "${CONTAINER_NAME}" --privileged \
+@@ -106,6 +106,8 @@ else
+ 		-v /dev:/dev \
+ 		-v /lib/modules:/lib/modules \
  		--volume "${CONFIG_FILE}":/config:ro \
 +		--volume "${DIR}/work":/pi-gen/work \
 +		--volume "${DIR}/deploy":/pi-gen/deploy \
  		-e "GIT_HASH=${GIT_HASH}" \
  		pi-gen \
  		bash -e -o pipefail -c "dpkg-reconfigure qemu-user-static &&
-@@ -107,7 +109,7 @@ else
- 	wait "$!"
+@@ -115,7 +117,7 @@ else
  fi
+ 
  echo "copying results from deploy/"
 -${DOCKER} cp "${CONTAINER_NAME}":/pi-gen/deploy .
 +#${DOCKER} cp "${CONTAINER_NAME}":/pi-gen/deploy .
@@ -21,14 +21,16 @@ index 350f722..92e8bf6 100755
  
  # cleanup
 diff --git a/stage2/01-sys-tweaks/00-packages b/stage2/01-sys-tweaks/00-packages
-index 83ec74c..5ade53d 100644
+index a1f4b59..00fbe74 100644
 --- a/stage2/01-sys-tweaks/00-packages
 +++ b/stage2/01-sys-tweaks/00-packages
-@@ -1,31 +1,15 @@
+@@ -1,33 +1,16 @@
  ssh less fbset sudo psmisc strace ed ncdu crda
  console-setup keyboard-configuration debconf-utils parted unzip
 -build-essential manpages-dev python bash-completion gdb pkg-config
 -python-rpi.gpio v4l-utils
+-python-gpiozero
+-python3-gpiozero
  avahi-daemon
 -lua5.1
 -luajit
@@ -37,7 +39,7 @@ index 83ec74c..5ade53d 100644
 -libraspberrypi-dev libraspberrypi-doc libfreetype6-dev
 -dosfstools
 -dphys-swapfile
-+fake-hwclock
++fake-hwclock usbutils
  raspberrypi-sys-mods
  pi-bluetooth
 -apt-listchanges
@@ -51,7 +53,7 @@ index 83ec74c..5ade53d 100644
 -policykit-1
  ssh-import-id
  rng-tools
--ethtool
+ ethtool
  vl805fw
 -ntfs-3g
  pciutils
