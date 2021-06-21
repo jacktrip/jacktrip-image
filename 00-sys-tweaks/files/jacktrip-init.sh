@@ -127,6 +127,14 @@ function detect_card {
 		return
 	fi
 	remove_overlay hifiberry-dacplusadc
+	
+	# Check HiFiBerry DIGI (via dtoverlay dynamic load)
+	add_overlay hifiberry-digi
+	verify_card "sndrpihifiberry" "snd_rpi_hifiberry_digi"
+	if [ "$DEVICETYPE" != "" ]; then
+		return
+	fi
+	remove_overlay hifiberry-digi
 
 	# Check Audio Injector Stereo (via dtoverlay dynamic load)
 	add_overlay audioinjector-wm8731-audio

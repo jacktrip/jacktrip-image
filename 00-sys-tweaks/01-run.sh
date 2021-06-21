@@ -17,6 +17,7 @@ mkdir -p "${ROOTFS_DIR}/var/lib/jacktrip"
 
 install -m 644 files/asound.snd_rpi_hifiberry_dacplusadc.state		"${ROOTFS_DIR}/var/lib/jacktrip"
 install -m 644 files/asound.snd_rpi_hifiberry_dacplusadcpro.state	"${ROOTFS_DIR}/var/lib/jacktrip"
+install -m 644 files/asound.snd_rpi_hifiberry_digi.state		"${ROOTFS_DIR}/var/lib/jacktrip"
 install -m 644 files/asound.audioinjector-pi-soundcard.state		"${ROOTFS_DIR}/var/lib/jacktrip"
 install -m 644 files/asound.USB\ Audio\ Device.state			"${ROOTFS_DIR}/var/lib/jacktrip"
 install -m 644 files/asound.USB\ PnP\ Sound\ Device.state		"${ROOTFS_DIR}/var/lib/jacktrip"
