@@ -68,7 +68,7 @@ sed -i "s,^PrivateTmp=true,#PrivateTmp=true," "${ROOTFS_DIR}/etc/systemd/system/
 # sleep for 5 seconds, power off and then power on the device. So the most
 # reliable way to ensure that jacktrip-beacon.sh gets run after this is to
 # just modify bthelper so that it runs it directly.
-sed -i "s,power on;,power on; /usr/local/bin/jacktrip-beacon.sh;," "${ROOTFS_DIR}/usr/bin/bthelper"
+sed -i "s,power on,power on; /usr/local/bin/jacktrip-beacon.sh," "${ROOTFS_DIR}/usr/bin/bthelper"
 
 on_chroot << EOF
 
