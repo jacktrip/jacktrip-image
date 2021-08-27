@@ -8,6 +8,7 @@ Type=oneshot
 User=root
 Group=root
 ExecStart=/usr/local/bin/jacktrip-init.sh
+RemainAfterExit=true
 Restart=no
 StandardOutput=journal
 StandardError=inherit
