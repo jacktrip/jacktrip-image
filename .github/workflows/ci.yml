@@ -1,0 +1,49 @@
+name: Image CI
+
+on:
+  push:
+  pull_request:
+    branches:
+    - develop
+    - main
+
+env:
+  JKTP_IMAGE_FILES_URL: https://files.jacktrip.org/binaries/jacktrip-image-files-20210812.tar.gz
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Checkout pi-gen
+      uses: actions/checkout@v2
+      with:
+        repository: RPi-Distro/pi-gen
+        path: pi-gen
+    - name: Checkout jacktrip-image
+      uses: actions/checkout@v2
+      with:
+        path: pi-gen/jacktrip-image
+    - name: Fetch binaries
+      run: |
+        cd ${GITHUB_WORKSPACE}/pi-gen
+        wget -q -O - ${JKTP_IMAGE_FILES_URL} | tar -C jacktrip-image/00-sys-tweaks/files -xzvf -
+    - name: Patch files
+      run: |
+        cd ${GITHUB_WORKSPACE}/pi-gen
+        cp jacktrip-image/config .
+        patch -p1 < jacktrip-image/pi-gen.patch
+    - name: Build image
+      run: |
+        cd ${GITHUB_WORKSPACE}/pi-gen
+        sudo ./build-docker.sh
+        export VERSION=`date +"%Y%m%d"`
+        cd deploy
+        mv *.zip jacktrip-rpi-${VERSION}.zip
+        sha256sum jacktrip-rpi-${VERSION}.zip > jacktrip-rpi-${VERSION}.zip.sha256
+    - name: Archive artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: jacktrip-rpi-image
+        path: pi-gen/deploy/jacktrip-rpi-*
+        retention-days: 1
