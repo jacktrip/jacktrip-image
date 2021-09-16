@@ -26,6 +26,7 @@ install -m 644 files/jamulus.ini					"${ROOTFS_DIR}/var/lib/jacktrip"
 install -m 755 files/jacktrip-init.sh		"${ROOTFS_DIR}/usr/local/bin"
 install -m 755 files/jacktrip-beacon.sh		"${ROOTFS_DIR}/usr/local/bin"
 install -m 755 files/jacktrip-patches.sh	"${ROOTFS_DIR}/usr/local/bin"
+install -m 755 files/jacktrip-credentials.sh	"${ROOTFS_DIR}/usr/local/bin"
 install -m 755 files/jacktrip-wait-online.sh	"${ROOTFS_DIR}/usr/local/bin"
 install -m 755 files/jacktrip-agent		"${ROOTFS_DIR}/usr/local/bin"
 install -m 755 files/jacktrip			"${ROOTFS_DIR}/usr/local/bin"
@@ -35,6 +36,7 @@ install -m 755 files/jack-peak-meter		"${ROOTFS_DIR}/usr/local/bin"
 install -m 755 files/Jamulus			"${ROOTFS_DIR}/usr/local/bin"
 
 install -m 644 files/jacktrip-patches.service	"${ROOTFS_DIR}/etc/systemd/system/"
+install -m 644 files/jacktrip-credentials.service	"${ROOTFS_DIR}/etc/systemd/system/"
 install -m 644 files/jacktrip-init.service	"${ROOTFS_DIR}/etc/systemd/system/"
 install -m 644 files/jacktrip-agent.service	"${ROOTFS_DIR}/etc/systemd/system/"
 install -m 644 files/jacktrip-clock.service	"${ROOTFS_DIR}/etc/systemd/system/"
@@ -78,6 +80,7 @@ useradd -r -M -N -G audio -s /usr/sbin/nologin jamulus
 systemctl daemon-reload
 
 systemctl enable jacktrip-patches
+systemctl enable jacktrip-credentials
 systemctl enable jacktrip-init
 systemctl enable jacktrip-agent
 systemctl enable jacktrip-clock
