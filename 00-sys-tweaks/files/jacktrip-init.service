@@ -1,7 +1,7 @@
 [Unit]
 Description=JackTrip-Init
 After=jacktrip-patches.service
-Before=rc-local.service
+Before=rc-local.service avahi-daemon.service
 
 [Service]
 Type=oneshot

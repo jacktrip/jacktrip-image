@@ -6,21 +6,8 @@
 CONFIG_DIR=/etc/jacktrip
 ETC_AVAHI_SERVICES_DIR=/etc/avahi/services
 TMP_AVAHI_SERVICES_DIR=/tmp/avahi/services
-CREDENTIALS_FILE="${CONFIG_DIR}/credentials"
 DEVICENAME_FILE="${CONFIG_DIR}/devicename"
 DEVICETYPE_FILE="${CONFIG_DIR}/devicetype"
-
-# get a random string (default 15). Optionally set a random length.
-# random_string        -> 15 chars
-# random_string 50     -> 50 chars
-# random_string 20 80  -> will be between 20 and 80 chars long
-# from https://www.supertechcrew.com/random-numbers-strings-bash-shell-scripting/#:~:text=Creating%20Random%20Numbers%20and%20Strings,--random-source=/dev/urandom%20-i%200-100%20-n%201
-random_string() {
-        local l=15
-        [ -n "$1" ] && l=$1
-        [ -n "$2" ] && l=$(shuf --random-source=/dev/urandom -i $1-$2 -n 1)
-        tr -dc A-Za-z0-9 < /dev/urandom | head -c ${l} | xargs
-}
 
 # ensure that a line exists in /boot/config.txt
 ini_ensure() {
@@ -68,22 +55,29 @@ function check_hat {
 	fi
 }
 
-# detect supported sound card
+# detect supported alsa sound card
 function detect_card {
+	# Assume that the first ALSA card is the one we want to use (if it exists)
+	DEVICETYPE=$(aplay -l 2> /dev/null | grep -m 1 'card [0-9]\+:' | sed 's/card [0-9]\+: \([^]]\+\) \[\([^]]\+\)\].*$/\2/')
+	DEVICENAME=$(aplay -l 2> /dev/null | grep -m 1 'card [0-9]\+:' | sed 's/card [0-9]\+: \([^]]\+\) \[\([^]]\+\)\].*$/\1/')
+}
+
+# detect supported sound card (prefer HAT)
+function detect_hat {
 	check_hat
 
 	# check if HiFiBerry DAC+ ADC Pro is already configured
 	verify_card "sndrpihifiberry" "snd_rpi_hifiberry_dacplusadcpro"
 	if [ "$DEVICETYPE" != "" ]; then
 		# Set headphone amp volume for Stage
-		i2cset -y 1 0x60 0x01 0xc0 2>/dev/null
-		i2cset -y 1 0x60 0x02 0x31 2>/dev/null
+		i2cset -y 1 0x60 0x01 0xc0 2>/dev/null || true
+		i2cset -y 1 0x60 0x02 0x31 2>/dev/null || true
 		return
 	fi
 
 	# Check i2cget for HiFiBerry DAC+ ADC Pro
 	if [ "$HATCARD" != "DAC+ ADC Pro" ]; then
-		res=`i2cget -y 1 0x4a 25 2>/dev/null`
+		res=`i2cget -y 1 0x4a 25 2>/dev/null || true`
 		if [ "$res" == "0x00" ]; then
 			HATCARD="DAC+ ADC Pro"
 		fi
@@ -110,12 +104,11 @@ function detect_card {
 		fi
 	fi
 
-	# Assume that the first ALSA card is the one we want to use (if it exists)
-	DEVICETYPE=$(aplay -l 2> /dev/null | grep -m 1 'card [0-9]\+:' | sed 's/card [0-9]\+: \([^]]\+\) \[\([^]]\+\)\].*$/\2/')
+	detect_card
 	if [ "$DEVICETYPE" != "" ]; then
-		DEVICENAME=$(aplay -l 2> /dev/null | grep -m 1 'card [0-9]\+:' | sed 's/card [0-9]\+: \([^]]\+\) \[\([^]]\+\)\].*$/\1/')
 		return
 	fi
+
 	if [ "$HATCARD" != "" ]; then
 		return -1
 	fi
@@ -147,11 +140,41 @@ function detect_card {
 	return -1
 }
 
+# turn off red and green lights
+function leds_off {
+	echo 0 > /sys/class/leds/led0/brightness
+	echo 0 > /sys/class/leds/led1/brightness
+}
+
+# turn on red and green lights
+function leds_on {
+	echo 1 > /sys/class/leds/led0/brightness
+	echo 1 > /sys/class/leds/led1/brightness
+}
+
+# turn on red and green lights
+function leds_flip {
+	STATUS=`cat /sys/class/leds/led0/brightness`
+	if [ "$STATUS" == "0" ]; then
+		leds_on
+	else
+		leds_off
+	fi
+}
+
 # update sound device
 function update_device {
 
 	# Detect sound card
-	detect_card
+	detect_hat
+
+	# Keep trying, so that a USB device can later be plugged in
+	while [ "$DEVICETYPE" == "" ]; do
+		echo "Unable to detect sound device"
+		leds_flip
+		sleep 5
+		detect_card
+	done
 
 	# Ensure config directory exists
 	if [ ! -d ${CONFIG_DIR} ]; then
@@ -169,12 +192,9 @@ function update_device {
 	fi
 
 	# Show results
-	if [ "$DEVICETYPE" == "" ]; then
-		echo "Unable to detect sound device"
-		return -1
-	fi
 	echo "Found sound device NAME=$DEVICENAME TYPE=$DEVICETYPE"
 	aplay -l
+	leds_on
 }
 
 # update /etc/issue
@@ -198,16 +218,6 @@ $APLAY
 EOF
 }
 
-# update API credentials, if necessary
-function update_credentials {
-	if [ ! `grep "^[a-zA-Z0-9]*\.[a-zA-Z0-9]*$" ${CREDENTIALS_FILE}` ]; then
-		echo "Generating new credentials file: ${CREDENTIALS_FILE}"
-		API_PREFIX=`random_string 7`
-		API_SECRET=`random_string 32`
-		echo "${API_PREFIX}.${API_SECRET}" > ${CREDENTIALS_FILE}
-	fi
-}
-
 # update avahi services directory
 function update_avahi_services {
 	# Ensure etc services directory exists
@@ -218,16 +228,16 @@ function update_avahi_services {
 	# Ensure tmp services directory exists
 	if [ ! -d ${TMP_AVAHI_SERVICES_DIR} ]; then
 		mkdir -p ${TMP_AVAHI_SERVICES_DIR}
+
+		# bind mount tmp services to etc services
+		mount --bind $TMP_AVAHI_SERVICES_DIR $ETC_AVAHI_SERVICES_DIR
+		#systemctl restart avahi-daemon
 	fi
 
 	# make sure ssh service file exists in tmp
 	if [ ! -f "${TMP_AVAHI_SERVICES_DIR}/ssh.service" ]; then
 		cp "/usr/share/doc/avahi-daemon/examples/ssh.service" "${TMP_AVAHI_SERVICES_DIR}/ssh.service"
 	fi
-
-	# bind mount tmp services to etc services
-	mount --bind $TMP_AVAHI_SERVICES_DIR $ETC_AVAHI_SERVICES_DIR
-	systemctl restart avahi-daemon
 }
 
 
@@ -237,7 +247,6 @@ mount -o remount,rw /boot
 
 # initialize config and services
 update_issue
-update_credentials
 update_avahi_services
 update_device
 
