@@ -18,10 +18,6 @@ random_string() {
         tr -dc A-Za-z0-9 < /dev/urandom | head -c ${l} | xargs
 }
 
-# Remount volumes read-write
-mount -o remount,rw /
-mount -o remount,rw /boot
-
 # update API credentials, if necessary
 if [ ! `grep "^[a-zA-Z0-9]*\.[a-zA-Z0-9]*$" ${CREDENTIALS_FILE}` ]; then
 	echo "Generating new credentials file: ${CREDENTIALS_FILE}"
@@ -29,8 +25,3 @@ if [ ! `grep "^[a-zA-Z0-9]*\.[a-zA-Z0-9]*$" ${CREDENTIALS_FILE}` ]; then
 	API_SECRET=`random_string 32`
 	echo "${API_PREFIX}.${API_SECRET}" > ${CREDENTIALS_FILE}
 fi
-
-# Remount volumes read-only
-sync
-mount -o remount,ro /
-mount -o remount,ro /boot

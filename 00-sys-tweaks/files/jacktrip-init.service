@@ -1,6 +1,6 @@
 [Unit]
 Description=JackTrip-Init
-After=jacktrip-patches.service
+After=jacktrip-patches.service jacktrip-credentials.service
 Before=rc-local.service avahi-daemon.service
 
 [Service]
