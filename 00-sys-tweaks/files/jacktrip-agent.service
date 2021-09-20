@@ -1,6 +1,6 @@
 [Unit]
 Description=JackTrip-Agent
-After=network.target jacktrip-patches.service jacktrip-credentials.service jacktrip-init.service
+After=jacktrip-init.service
 
 [Service]
 Type=simple
