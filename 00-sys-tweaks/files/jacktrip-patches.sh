@@ -87,11 +87,5 @@ check_patches() {
     return 0
 }
 
-# Remount root read-write
-mount -o remount,rw /
-
 # main
 check_patches
-
-# Remount root read-only
-mount -o remount,ro /

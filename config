@@ -1,6 +1,5 @@
 IMG_NAME=jacktrip
 RELEASE=buster
-APT_PROXY=http://terra.miked.io:3142
 LOCALE_DEFAULT=en_US.UTF-8
 TARGET_HOSTNAME=jacktrip
 KEYBOARD_KEYMAP=us

@@ -1,0 +1,89 @@
+state.b1 {
+	control.1 {
+		iface MIXER
+		name 'HDMI Playback Volume'
+		value 0
+		comment {
+			access 'read write'
+			type INTEGER
+			count 1
+			range '-10239 - 400'
+			dbmin -9999999
+			dbmax 400
+			dbvalue.0 0
+		}
+	}
+	control.2 {
+		iface MIXER
+		name 'HDMI Playback Switch'
+		value true
+		comment {
+			access 'read write'
+			type BOOLEAN
+			count 1
+		}
+	}
+}
+state.Headphones {
+	control.1 {
+		iface MIXER
+		name 'Headphone Playback Volume'
+		value -2000
+		comment {
+			access 'read write'
+			type INTEGER
+			count 1
+			range '-10239 - 400'
+			dbmin -9999999
+			dbmax 400
+			dbvalue.0 -2000
+		}
+	}
+	control.2 {
+		iface MIXER
+		name 'Headphone Playback Switch'
+		value true
+		comment {
+			access 'read write'
+			type BOOLEAN
+			count 1
+		}
+	}
+}
+state.pisound {
+	control.1 {
+		iface MIXER
+		name 'PCM Playback Switch'
+		value true
+		comment {
+			access read
+			type BOOLEAN
+			count 1
+		}
+	}
+	control.2 {
+		iface MIXER
+		name 'PCM Playback Volume'
+		value 100
+		comment {
+			access read
+			type INTEGER
+			count 1
+			range '0 - 100'
+		}
+	}
+}
+state.sndrpihifiberry {
+	control.1 {
+		iface MIXER
+		name 'Tx Source'
+		value 'S/PDIF RX'
+		comment {
+			access 'read write'
+			type ENUMERATED
+			count 1
+			item.0 'S/PDIF RX'
+			item.1 AIF
+		}
+	}
+}

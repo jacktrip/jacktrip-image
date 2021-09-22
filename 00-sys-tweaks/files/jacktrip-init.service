@@ -1,13 +1,14 @@
 [Unit]
 Description=JackTrip-Init
-After=jacktrip-patches.service
-Before=rc-local.service
+After=jacktrip-patches.service jacktrip-credentials.service
+Before=rc-local.service avahi-daemon.service
 
 [Service]
 Type=oneshot
 User=root
 Group=root
 ExecStart=/usr/local/bin/jacktrip-init.sh
+RemainAfterExit=true
 Restart=no
 StandardOutput=journal
 StandardError=inherit
