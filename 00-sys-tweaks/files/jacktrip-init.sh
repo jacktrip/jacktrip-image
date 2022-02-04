@@ -202,6 +202,7 @@ function update_issue {
 	IP=$(hostname -I) || true
 	MAC=$(cat /sys/class/net/eth0/address) || true
 	APLAY=$(/usr/bin/aplay -l)
+	VERSION=$(cat /etc/jacktrip/patch)
 
 	if [ "$APLAY" == "" ]; then
 		APLAY="No sound card found"
@@ -210,6 +211,7 @@ function update_issue {
 	cat << EOF >/etc/issue
 Raspbian GNU/Linux 10 \\n \\l
 
+JackTrip Image $VERSION
 My IP address is $IP
 My MAC address is $MAC
 
