@@ -1,14 +1,14 @@
 # JackTrip Raspberry Pi Image
 
 ```
-# Clone pi-gen repository
-git clone https://github.com/RPi-Distro/pi-gen.git
+# Clone buster branch of pi-gen repository
+git clone -b buster https://github.com/RPi-Distro/pi-gen.git
 
 # Clone this repository as a subdirectory
 cd pi-gen && git clone git@github.com:jacktrip/jacktrip-image.git
 
 # Grab the latest binary files
-wget -q -O - https://files.jacktrip.org/binaries/jacktrip-image-files-20211102.tar.gz |tar -C jacktrip-image/00-sys-tweaks/files -xzvf -
+wget -q -O - https://files.jacktrip.org/binaries/jacktrip-image-files-20220204.tar.gz |tar -C jacktrip-image/00-sys-tweaks/files -xzvf -
 
 # Copy pi-gen config file
 cp jacktrip-image/config .

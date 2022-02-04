@@ -1,17 +1,17 @@
 diff --git a/build-docker.sh b/build-docker.sh
-index 5d31f86..2c9759e 100755
+index 01fd517..5bbad07 100755
 --- a/build-docker.sh
 +++ b/build-docker.sh
-@@ -106,6 +106,8 @@ else
- 		-v /dev:/dev \
+@@ -109,6 +109,8 @@ else
  		-v /lib/modules:/lib/modules \
+ 		${PIGEN_DOCKER_OPTS} \
  		--volume "${CONFIG_FILE}":/config:ro \
 +		--volume "${DIR}/work":/pi-gen/work \
 +		--volume "${DIR}/deploy":/pi-gen/deploy \
  		-e "GIT_HASH=${GIT_HASH}" \
  		pi-gen \
  		bash -e -o pipefail -c "dpkg-reconfigure qemu-user-static &&
-@@ -115,7 +117,7 @@ else
+@@ -118,7 +120,7 @@ else
  fi
  
  echo "copying results from deploy/"
