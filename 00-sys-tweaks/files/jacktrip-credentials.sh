@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # JackTrip Raspberry Pi Image: Credentials Service
-# Copyright (c) 2020-2021 JackTrip Labs, Inc.
+# Copyright (c) 2020-2022 JackTrip Labs, Inc.
 
 CONFIG_DIR=/etc/jacktrip
 CREDENTIALS_FILE="${CONFIG_DIR}/credentials"

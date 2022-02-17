@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # JackTrip Raspberry Pi Image: Initialization Service
-# Copyright (c) 2020 JackTrip Foundation
+# Copyright (c) 2020-2022 JackTrip Labs, Inc.
 
 CONFIG_DIR=/etc/jacktrip
 ETC_AVAHI_SERVICES_DIR=/etc/avahi/services

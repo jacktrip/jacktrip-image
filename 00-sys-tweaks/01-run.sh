@@ -15,6 +15,13 @@ ini_ensure '.*dtparam=i2c1=.*' 'dtparam=i2c1=on'
 
 mkdir -p "${ROOTFS_DIR}/var/lib/jacktrip"
 
+# add JACK_PROMISCUOUS_SERVER to allow other users to access jackd - groups don't actually work so using the environment variable
+# see: http://manpages.ubuntu.com/manpages/bionic/man1/jackd.1.html
+sudo bash -c 'echo "JACK_PROMISCUOUS_SERVER=audio" >> /etc/environment'
+
+# add root to audio group for jackd socket access
+sudo usermod -a -G audio root
+
 install -m 644 files/asound.snd_rpi_hifiberry_dacplusadc.state		"${ROOTFS_DIR}/var/lib/jacktrip"
 install -m 644 files/asound.snd_rpi_hifiberry_dacplusadcpro.state	"${ROOTFS_DIR}/var/lib/jacktrip"
 install -m 644 files/asound.snd_rpi_hifiberry_digi.state		"${ROOTFS_DIR}/var/lib/jacktrip"

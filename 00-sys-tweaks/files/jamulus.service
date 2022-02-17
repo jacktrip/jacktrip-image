@@ -14,6 +14,7 @@ IOSchedulingClass=realtime
 IOSchedulingPriority=0
 Environment="JACK_NO_AUDIO_RESERVATION=1"
 Environment="JACK_NO_START_SERVER=1"
+Environment="JACK_PROMISCUOUS_SERVER=audio"
 ExecStartPre=jack_wait -w -t 5
 EnvironmentFile=/tmp/default/jamulus
 ExecStart=/usr/local/bin/Jamulus $JAMULUS_OPTS

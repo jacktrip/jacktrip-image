@@ -6,6 +6,7 @@ After=jacktrip-init.service
 Type=simple
 User=root
 Group=root
+Environment="JACK_PROMISCUOUS_SERVER=audio"
 EnvironmentFile=-/etc/default/jacktrip-agent
 ExecStart=/usr/local/bin/jacktrip-agent $AGENT_OPTS
 Restart=always

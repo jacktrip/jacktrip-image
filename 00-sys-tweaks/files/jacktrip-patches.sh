@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # JackTrip Raspberry Pi Image: Update Patches
-# Copyright (c) 2020 JackTrip Foundation
+# Copyright (c) 2020-2022 JackTrip Labs, Inc.
 
 CONFIG_DIR=/etc/jacktrip
 PATCH_FILE="${CONFIG_DIR}/patch"
