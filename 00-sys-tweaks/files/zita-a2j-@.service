@@ -1,0 +1,30 @@
+[Unit]
+Description=JackTrip-Zita-A2J-Connections, %I
+After=network.target jack.service
+
+[Service]
+Type=simple
+User=jacktrip
+Group=audio
+NoNewPrivileges=true
+ProtectSystem=true
+ProtectHome=true
+Nice=-20
+IOSchedulingClass=realtime
+IOSchedulingPriority=0
+ExecStartPre=/usr/bin/jack_wait -w -t 1
+Environment="JACK_PROMISCUOUS_SERVER=audio"
+EnvironmentFile=/tmp/default/zita-j2a-%I-conf
+ExecStart=/usr/bin/zita-j2a $ZITA_OPTS
+Restart=always
+RestartSec=1
+StandardOutput=journal
+StandardError=inherit
+SyslogIdentifier=jacktrip
+LimitMEMLOCK=infinity
+LimitRTPRIO=99
+LimitNOFILE=200000
+LimitNPROC=200000
+
+[Install]
+WantedBy=multi-user.target
