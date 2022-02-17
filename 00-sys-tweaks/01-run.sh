@@ -25,13 +25,12 @@ usermod -a -G audio root
 # install newer jackd version
 JACKD_FILE=jack2-v1.9.19-3e6ca6b734b6-armhf.tar.gz
 JACKD_URL=https://files.jacktrip.org/binaries/armhf/${JACKD_FILE}
-cd /tmp
 wget --progress=bar:force:noscroll -O ${JACKD_FILE} ${JACKD_URL}
 wget --progress=bar:force:noscroll -O ${JACKD_FILE}.sha256 ${JACKD_URL}.sha256
-echo "$(cat /tmp/${JACKD_FILE}.sha256)" | sha256sum --check --status
-tar -C / -xzf /tmp/${JACKD_FILE}
+echo "$(cat ${JACKD_FILE}.sha256)" | sha256sum --check --status
+tar -C / -xzf ${JACKD_FILE}
 ldconfig
-rm -rf /tmp/*.tar.gz /tmp/*.sha256
+rm -rf *.tar.gz *.sha256
 
 install -m 644 files/asound.snd_rpi_hifiberry_dacplusadc.state		"${ROOTFS_DIR}/var/lib/jacktrip"
 install -m 644 files/asound.snd_rpi_hifiberry_dacplusadcpro.state	"${ROOTFS_DIR}/var/lib/jacktrip"
