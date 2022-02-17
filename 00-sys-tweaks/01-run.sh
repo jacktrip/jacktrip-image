@@ -17,10 +17,21 @@ mkdir -p "${ROOTFS_DIR}/var/lib/jacktrip"
 
 # add JACK_PROMISCUOUS_SERVER to allow other users to access jackd - groups don't actually work so using the environment variable
 # see: http://manpages.ubuntu.com/manpages/bionic/man1/jackd.1.html
-sudo bash -c 'echo "JACK_PROMISCUOUS_SERVER=audio" >> /etc/environment'
+bash -c 'echo "JACK_PROMISCUOUS_SERVER=audio" >> /etc/environment'
 
 # add root to audio group for jackd socket access
-sudo usermod -a -G audio root
+usermod -a -G audio root
+
+# install newer jackd version
+JACKD_URL=https://files.jacktrip.org/binaries/armhf/jack2-v1.9.19-3e6ca6b734b6-armhf.tar.gz
+cd /tmp
+wget --progress=bar:force:noscroll -O jack2.tar.gz ${JACKD_URL}
+wget --progress=bar:force:noscroll -O jack2.tar.gz.sha256 ${JACKD_URL}.sha256
+echo "$(cat /tmp/jack2.tar.gz.sha256)" | sha256sum --check --status
+rm jack2.tar.gz.sha256
+tar -C / -xzf ${TMPDIR}/jack2-v1.9.19-3e6ca6b734b6-amd64.tar.gz
+ldconfig
+rm -rf /tmp/*.tar.gz /tmp/*.sha256
 
 install -m 644 files/asound.snd_rpi_hifiberry_dacplusadc.state		"${ROOTFS_DIR}/var/lib/jacktrip"
 install -m 644 files/asound.snd_rpi_hifiberry_dacplusadcpro.state	"${ROOTFS_DIR}/var/lib/jacktrip"
