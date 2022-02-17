@@ -23,13 +23,13 @@ bash -c 'echo "JACK_PROMISCUOUS_SERVER=audio" >> /etc/environment'
 usermod -a -G audio root
 
 # install newer jackd version
-JACKD_URL=https://files.jacktrip.org/binaries/armhf/jack2-v1.9.19-3e6ca6b734b6-armhf.tar.gz
+JACKD_FILE=jack2-v1.9.19-3e6ca6b734b6-armhf.tar.gz
+JACKD_URL=https://files.jacktrip.org/binaries/armhf/${JACKD_FILE}
 cd /tmp
-wget --progress=bar:force:noscroll -O jack2.tar.gz ${JACKD_URL}
-wget --progress=bar:force:noscroll -O jack2.tar.gz.sha256 ${JACKD_URL}.sha256
-echo "$(cat /tmp/jack2.tar.gz.sha256)" | sha256sum --check --status
-rm jack2.tar.gz.sha256
-tar -C / -xzf ${TMPDIR}/jack2-v1.9.19-3e6ca6b734b6-amd64.tar.gz
+wget --progress=bar:force:noscroll -O ${JACKD_FILE} ${JACKD_URL}
+wget --progress=bar:force:noscroll -O ${JACKD_FILE}.sha256 ${JACKD_URL}.sha256
+echo "$(cat /tmp/${JACKD_FILE}.sha256)" | sha256sum --check --status
+tar -C / -xzf /tmp/${JACKD_FILE}
 ldconfig
 rm -rf /tmp/*.tar.gz /tmp/*.sha256
 
