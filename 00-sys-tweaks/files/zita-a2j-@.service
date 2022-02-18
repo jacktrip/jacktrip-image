@@ -12,10 +12,10 @@ ProtectHome=true
 Nice=-20
 IOSchedulingClass=realtime
 IOSchedulingPriority=0
-ExecStartPre=/usr/bin/jack_wait -w -t 1
+ExecStartPre=/usr/bin/jack_wait -w -t 5
 Environment="JACK_PROMISCUOUS_SERVER=audio"
-EnvironmentFile=/tmp/default/zita-j2a-%I-conf
-ExecStart=/usr/bin/zita-j2a $ZITA_OPTS
+EnvironmentFile=/tmp/default/zita-a2j-%I-conf
+ExecStart=/usr/bin/zita-a2j $ZITA_OPTS
 Restart=always
 RestartSec=1
 StandardOutput=journal
