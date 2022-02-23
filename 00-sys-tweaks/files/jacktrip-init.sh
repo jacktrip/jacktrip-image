@@ -169,12 +169,18 @@ function update_device {
 	detect_hat
 
 	# Keep trying, so that a USB device can later be plugged in
-	while [ "$DEVICETYPE" == "" ]; do
-		echo "Unable to detect sound device"
-		leds_flip
-		sleep 5
-		detect_card
-	done
+	#while [ "$DEVICETYPE" == "" ]; do
+	#	echo "Unable to detect sound device"
+	#	leds_flip
+	#	sleep 5
+	#	detect_card
+	#done
+
+	# Use dummy device if no sound card is detected
+	if [ "$DEVICETYPE" == "" ]; then
+		DEVICETYPE="dummy"
+		DEVICENAME="dummy"
+	fi
 
 	# Ensure config directory exists
 	if [ ! -d ${CONFIG_DIR} ]; then
