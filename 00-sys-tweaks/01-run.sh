@@ -15,10 +15,6 @@ ini_ensure '.*dtparam=i2c1=.*' 'dtparam=i2c1=on'
 
 mkdir -p "${ROOTFS_DIR}/var/lib/jacktrip"
 
-# add JACK_PROMISCUOUS_SERVER to allow other users to access jackd - groups don't actually work so using the environment variable
-# see: http://manpages.ubuntu.com/manpages/bionic/man1/jackd.1.html
-bash -c 'echo "JACK_PROMISCUOUS_SERVER=audio" >> /etc/environment'
-
 # add root to audio group for jackd socket access
 usermod -a -G audio root
 
@@ -42,6 +38,9 @@ install -m 755 files/jack_capture               "${ROOTFS_DIR}/usr/local/bin"
 install -m 755 files/jack-peak-meter            "${ROOTFS_DIR}/usr/local/bin"
 install -m 755 files/Jamulus                    "${ROOTFS_DIR}/usr/local/bin"
 
+# add JACK_PROMISCUOUS_SERVER to allow other users to access jackd - groups don't actually work so using the environment variable
+# see: http://manpages.ubuntu.com/manpages/bionic/man1/jackd.1.html
+install -m 644 files/jack_env.sh                    "${ROOTFS_DIR}/etc/profile.d/"
 install -m 644 files/jacktrip-patches.service       "${ROOTFS_DIR}/etc/systemd/system/"
 install -m 644 files/jacktrip-credentials.service   "${ROOTFS_DIR}/etc/systemd/system/"
 install -m 644 files/jacktrip-init.service          "${ROOTFS_DIR}/etc/systemd/system/"
