@@ -55,13 +55,6 @@ function check_hat {
 	fi
 }
 
-# detect supported alsa sound card
-function detect_card {
-	# Assume that the first ALSA card is the one we want to use (if it exists)
-	DEVICETYPE=$(aplay -l 2> /dev/null | grep -m 1 'card [0-9]\+:' | sed 's/card [0-9]\+: \([^]]\+\) \[\([^]]\+\)\].*$/\2/')
-	DEVICENAME=$(aplay -l 2> /dev/null | grep -m 1 'card [0-9]\+:' | sed 's/card [0-9]\+: \([^]]\+\) \[\([^]]\+\)\].*$/\1/')
-}
-
 # detect supported sound card (prefer HAT)
 function detect_hat {
 	check_hat
@@ -104,7 +97,6 @@ function detect_hat {
 		fi
 	fi
 
-	detect_card
 	if [ "$DEVICETYPE" != "" ]; then
 		return
 	fi
