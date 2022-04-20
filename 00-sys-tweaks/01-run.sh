@@ -49,8 +49,8 @@ install -m 644 files/jacktrip-clock.service         "${ROOTFS_DIR}/etc/systemd/s
 install -m 644 files/jamulus.service                "${ROOTFS_DIR}/etc/systemd/system/"
 install -m 644 files/jacktrip.service               "${ROOTFS_DIR}/etc/systemd/system/"
 install -m 644 files/jack.service                   "${ROOTFS_DIR}/etc/systemd/system/"
-install -m 644 files/zita-a2j-@.service             "${ROOTFS_DIR}/etc/systemd/system/"
-install -m 644 files/zita-j2a-@.service             "${ROOTFS_DIR}/etc/systemd/system/"
+install -m 644 files/zita-a2j@.service              "${ROOTFS_DIR}/etc/systemd/system/"
+install -m 644 files/zita-j2a@.service              "${ROOTFS_DIR}/etc/systemd/system/"
 
 install -m 644 files/dhcpcd-wait.conf   "${ROOTFS_DIR}/etc/systemd/system/dhcpcd.service.d/wait.conf"
 
