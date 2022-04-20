@@ -15,7 +15,7 @@ IOSchedulingPriority=0
 Environment="JACK_NO_AUDIO_RESERVATION=1"
 Environment="JACK_PROMISCUOUS_SERVER=audio"
 EnvironmentFile=/tmp/default/jack
-ExecStart=/usr/local/bin/jackd $JACK_OPTS
+ExecStart=/usr/bin/jackd $JACK_OPTS
 Restart=always
 RestartSec=5
 StandardOutput=journal

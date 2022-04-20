@@ -68,7 +68,6 @@ mkdir -p "${ROOTFS_DIR}/etc/jacktrip"
 echo $(date "+%Y%m%d99") > "${ROOTFS_DIR}/etc/jacktrip/patch"
 
 sed -i "s,ExecStart=.*,ExecStart=/usr/local/bin/jacktrip-wait-online.sh," "${ROOTFS_DIR}/lib/systemd/system/ifupdown-wait-online.service"
-sed -i "s,ExecStart=/usr/local/bin/jackd,ExecStart=/usr/bin/jackd," "${ROOTFS_DIR}/etc/systemd/system/jack.service"
 
 cp "${ROOTFS_DIR}/lib/systemd/system/ntp.service" "${ROOTFS_DIR}/etc/systemd/system/ntp.service"
 sed -i "s,^PrivateTmp=true,#PrivateTmp=true," "${ROOTFS_DIR}/etc/systemd/system/ntp.service"
