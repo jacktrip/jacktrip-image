@@ -16,11 +16,12 @@ ExecStartPre=/usr/bin/jack_wait -w -t 5
 Environment="JACK_PROMISCUOUS_SERVER=audio"
 EnvironmentFile=/tmp/default/zita-j2a-%I-conf
 ExecStart=/usr/bin/zita-j2a $ZITA_OPTS
-Restart=always
-RestartSec=1
+Restart=on-failure
+SuccessExitStatus=SIGKILL
+RestartSec=3
 StandardOutput=journal
 StandardError=inherit
-SyslogIdentifier=jacktrip
+SyslogIdentifier=zita-j2a-%I
 LimitMEMLOCK=infinity
 LimitRTPRIO=99
 LimitNOFILE=200000
