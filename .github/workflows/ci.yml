@@ -7,7 +7,7 @@ on:
     - main
 
 env:
-  JKTP_IMAGE_FILES_URL: https://files.jacktrip.org/binaries/jacktrip-image-files-20220204.tar.gz
+  JKTP_IMAGE_FILES_URL: https://files.jacktrip.org/binaries/jacktrip-image-files-20220504.tar.gz
 
 jobs:
   build:
