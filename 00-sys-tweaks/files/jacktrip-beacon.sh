@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # JackTrip Raspberry Pi Image: Bluetooth Beacon Service
-# Copyright (c) 2021 JackTrip Labs Inc
+# Copyright (c) 2020-2022 JackTrip Labs, Inc.
 
 MACADDR=`cat /sys/class/net/eth0/address`
 

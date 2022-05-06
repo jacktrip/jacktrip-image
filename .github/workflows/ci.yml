@@ -7,13 +7,29 @@ on:
     - main
 
 env:
-  JKTP_IMAGE_FILES_URL: https://files.jacktrip.org/binaries/jacktrip-image-files-20210812.tar.gz
+  JKTP_IMAGE_FILES_URL: https://files.jacktrip.org/binaries/jacktrip-image-files-20220504.tar.gz
 
 jobs:
   build:
     name: Build
     runs-on: ubuntu-18.04
     steps:
+    - name: Setup QEMU
+      uses: docker/setup-qemu-action@v1
+    - name: Setup docker buildx
+      uses: docker/setup-buildx-action@v1
+    - name: Checkout jacktrip-agent
+      uses: actions/checkout@v2
+      with:
+        repository: jacktrip/jacktrip-agent
+        ref: develop
+        path: jacktrip-agent
+    - name: Build jacktrip-agent
+      run: |
+        cd ${GITHUB_WORKSPACE}/jacktrip-agent
+        make agent-arm
+      env:
+        DOCKER_BUILDKIT: 1
     - name: Checkout pi-gen
       uses: actions/checkout@v2
       with:
@@ -28,6 +44,7 @@ jobs:
       run: |
         cd ${GITHUB_WORKSPACE}/pi-gen
         wget -q -O - ${JKTP_IMAGE_FILES_URL} | tar -C jacktrip-image/00-sys-tweaks/files -xzvf -
+        cp ${GITHUB_WORKSPACE}/jacktrip-agent/jacktrip-agent-arm jacktrip-image/00-sys-tweaks/files/jacktrip-agent
     - name: Patch files
       run: |
         cd ${GITHUB_WORKSPACE}/pi-gen

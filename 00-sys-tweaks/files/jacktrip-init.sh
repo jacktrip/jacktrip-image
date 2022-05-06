@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # JackTrip Raspberry Pi Image: Initialization Service
-# Copyright (c) 2020 JackTrip Foundation
+# Copyright (c) 2020-2022 JackTrip Labs, Inc.
 
 CONFIG_DIR=/etc/jacktrip
 ETC_AVAHI_SERVICES_DIR=/etc/avahi/services
@@ -55,13 +55,6 @@ function check_hat {
 	fi
 }
 
-# detect supported alsa sound card
-function detect_card {
-	# Assume that the first ALSA card is the one we want to use (if it exists)
-	DEVICETYPE=$(aplay -l 2> /dev/null | grep -m 1 'card [0-9]\+:' | sed 's/card [0-9]\+: \([^]]\+\) \[\([^]]\+\)\].*$/\2/')
-	DEVICENAME=$(aplay -l 2> /dev/null | grep -m 1 'card [0-9]\+:' | sed 's/card [0-9]\+: \([^]]\+\) \[\([^]]\+\)\].*$/\1/')
-}
-
 # detect supported sound card (prefer HAT)
 function detect_hat {
 	check_hat
@@ -104,7 +97,6 @@ function detect_hat {
 		fi
 	fi
 
-	detect_card
 	if [ "$DEVICETYPE" != "" ]; then
 		return
 	fi
@@ -168,13 +160,11 @@ function update_device {
 	# Detect sound card
 	detect_hat
 
-	# Keep trying, so that a USB device can later be plugged in
-	while [ "$DEVICETYPE" == "" ]; do
-		echo "Unable to detect sound device"
-		leds_flip
-		sleep 5
-		detect_card
-	done
+	# Use dummy device if no sound card is detected
+	if [ "$DEVICETYPE" == "" ]; then
+		DEVICETYPE="dummy"
+		DEVICENAME="dummy"
+	fi
 
 	# Ensure config directory exists
 	if [ ! -d ${CONFIG_DIR} ]; then

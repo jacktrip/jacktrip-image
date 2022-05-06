@@ -1,0 +1,1 @@
+export JACK_PROMISCUOUS_SERVER=audio

@@ -1,5 +1,5 @@
 [Unit]
-Description=Jamulus-Client
+Description=JackTrip-Zita-J2A-Connections, %I
 After=network.target jack.service
 
 [Service]
@@ -12,19 +12,20 @@ ProtectHome=true
 Nice=-20
 IOSchedulingClass=realtime
 IOSchedulingPriority=0
-Environment="JACK_NO_AUDIO_RESERVATION=1"
-Environment="JACK_NO_START_SERVER=1"
+ExecStartPre=/usr/bin/jack_wait -w -t 5
 Environment="JACK_PROMISCUOUS_SERVER=audio"
-ExecStartPre=jack_wait -w -t 5
-EnvironmentFile=/tmp/default/jamulus
-ExecStart=/usr/local/bin/Jamulus $JAMULUS_OPTS
-Restart=always
-RestartSec=5
+EnvironmentFile=/tmp/default/zita-j2a-%I-conf
+ExecStart=/usr/bin/zita-j2a $ZITA_OPTS
+Restart=on-failure
+SuccessExitStatus=SIGKILL
+RestartSec=3
 StandardOutput=journal
 StandardError=inherit
-SyslogIdentifier=jamulus
+SyslogIdentifier=zita-j2a-%I
 LimitMEMLOCK=infinity
 LimitRTPRIO=99
+LimitNOFILE=200000
+LimitNPROC=200000
 
 [Install]
 WantedBy=multi-user.target

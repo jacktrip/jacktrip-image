@@ -14,6 +14,7 @@ IOSchedulingClass=realtime
 IOSchedulingPriority=0
 Environment="JACK_NO_AUDIO_RESERVATION=1"
 Environment="JACK_NO_START_SERVER=1"
+Environment="JACK_PROMISCUOUS_SERVER=audio"
 EnvironmentFile=/tmp/default/jacktrip
 ExecStartPre=jack_wait -w -t 5
 ExecStart=/usr/local/bin/jacktrip $JACKTRIP_OPTS
